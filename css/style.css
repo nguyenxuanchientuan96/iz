@@ -50,6 +50,7 @@ h2 a, h2{ margin: 0; font-size: 19px; font-family: museo, georgia, san-serif;}
 
 #footer{clear: both;background: #ccc;text-align: right;	padding: 20px;}
 .footer-links li {display: inline; margin: 0 5px;}
+.website{ display: none, visibility:hidden; }
 
 /******* FORM **********/
 legend {color:#000; background-color: #FFCBA0; padding: 3px 23px; border-radius: 5px;}

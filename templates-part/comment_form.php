@@ -25,28 +25,41 @@
 		//validate captcha question 
 		//captcha câu hỏi: 4+1 =?
 		//nếu k bằng 5-> errors
-		if(isset($_POST["captcha"]) && trim($_POST["captcha"]) !=5 ){
+		if(isset($_POST["captcha"]) && trim($_POST["captcha"]) !=$_SESSION['q']['answer'] ){
 			$errors[]="captcha";
 		}
 
+        // honey - pot
+        if(!empty($_POST['honey'])){
+            echo "thank you for your comment";
+            exit;
+
+        }
+
+        //salt
+        if(!empty($_POST['salt'])){
+            $errors[]='delete';
+        }
+
+            // thuc hien
 		if(empty($errors)) {
         // Neu ko co errors xay ra, them comment vao csdl
             $q = "INSERT INTO comments (page_id,author, email, comment, comment_date) VALUES ({$pid},'{$name}','{$email}','{$comment}', NOW())";
             $r = mysqli_query($conn,$q);
             if(mysqli_affected_rows($conn) == 1) {
                 // Success
-                echo "Thank you for your comment";
+                $message ="Thank you for your comment";
                 
             } else { // NO match was made
-                echo "có lỗi";
+                $message="có lỗi";
             }
         } else {
         // Neu co errors xay ra, do nguoi dung quen dien form, bao errors.
-       echo "điền đầy đủ thông tin";
+       $message= "Có lỗi xảy ra mời bạn kiểm tra lại";
         }
 	}	
 
-?>
+?>s
 <!-- hien thi comment tu csdl -->
 <?php
     $q="SELECT author, comment, DATE_FORMAT(comment_date,'%b %d, %y') AS date FROM comments WHERE page_id={$pid}";
@@ -70,7 +83,7 @@
     }
 
 ?>
-
+<?php if(!empty($message)) echo $message; ?>
 <form id="comment-form" action="" method="post">
     <fieldset>
     	<legend>Leave a comment</legend>
@@ -96,12 +109,31 @@
         
         
         <div>
-        <label for="captcha">Answer question: four plus one <span class="required">*</span>
-        	
+        <!-- label for="captcha">Answer question: four plus one <span class="required">*</span> -->
+        <label for="captcha">Phiền bạn điền vào gía trị số cho câu hỏi sau: <?php echo captcha(); ?> <span class="required">*</span>
 
         </label>
-            <input type="text" name="captcha" id="captcha" value="" size="20" maxlength="10" tabindex="4" />
+            <input type="text" name="captcha" id="captcha" value="1" size="20" maxlength="10" tabindex="4" />
         </div>
+
+        <!-- bẫy css -->
+        <!-- honey pot -->
+        <!-- tạo ra một truòng css, ẩn nó đi -> người dùng k nhìn thấy đc, còn nếu là bot thì sẽ đọc đc,post vào đc -> k cho post -> chống spam -->
+        <div class="website">
+            <label for="website"> Nếu bạn nhìn thấy trường này thì đừng điền gì vào hết vào </label>
+            <input type="text" name="honey" id="honey" value="" size="20" maxlength="20">
+        </div>
+
+
+        <!-- salt bot -->
+        <!-- NGược với honey pot, salt đưa ra một ô text có nội dung r và bắt mình xóa đi thì mới được poss, nhưng nguyên lí hoạt động của bot là nó sẽ điền vào text -> k thẻ submit được -->
+        <div>
+            <label for="salt"> Phiền bạn xóa gía trị này trước khi submit
+             <?php if(isset($errors) && in_array('delete',$errors)) echo "<span class='warning'>Bạn chưa xóa trường</span>";?>
+            </label>
+            <input type="text" name="salt" id="salt" value="Phiền bạn xóa gía trị này trước khi submit" size="20" maxlength="20">
+        </div>
+
     </fieldset>
     <div><input type="submit" name="submit" value="Post Comment" /></div>
 </form>
