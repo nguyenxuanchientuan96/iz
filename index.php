@@ -33,7 +33,7 @@
                         <p> ".the_excerpt($pages['content'])."
                         ... <a href='single.php?pid={$pages['page_id']}'> Read more </a></p>
                         
-                        <p class='meta'> <strong> Posted by: </strong> {$pages['name']} | <strong> On: {$pages['date']} </strong> </p>
+                        <p class='meta'><strong>Posted by:</strong> <a href='author.php?aid={$pages['user_id']}'> {$pages['name']}</a> | <strong>On: </strong> {$pages['date']} </p>
                     </div>
                     ";
             }
@@ -56,12 +56,12 @@
                 $r = mysqli_query($conn, $q) or die("Query {$q} \n<br/>MySQL Error:".mysqli_error($conn));
                 while($page=mysqli_fetch_array($r, MYSQLI_ASSOC)){
                     echo "
-                        <div class='post'>
-                            <h2> <a href='index.php?$pid={$pid}'> {$page['page_name']} </a> </h2>
-                            <p class='comments'> <a href='single.php?$pid={$pid}#discuss'> {$page['count']} </a></p>
-                            <p>".the_excerpt($page['content'])."... <a href='single.php?$pid={$pid}'> Read more </a> </p>
-                            <p class='meta'><strong>Posted by:</strong><a href='author.php?aid={$page['user_id']}'> {$page['name']}</a> | <strong>On: </strong> {$page['date']} </p>
-                        </div>
+                         <div class='post'>
+                                <h2><a href='single.php?pid={$pid}'>{$page['page_name']}</a></h2>
+                                <p class='comments'><a href='single.php?pid={$pid}#disscuss'>{$page['count']}</a></p>
+                                <p>".the_excerpt($page['content'])." ... <a href='single.php?pid={$pid}'>Read more</a></p>
+                                <p class='meta'><strong>Posted by:</strong><a href='author.php?aid={$page['user_id']}'> {$page['name']}</a> | <strong>On: </strong> {$page['date']} </p>
+                            </div>
             ";
                 }
     }else{

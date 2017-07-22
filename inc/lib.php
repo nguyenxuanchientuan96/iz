@@ -52,5 +52,27 @@ function the_content($text){
 		return $question= $qna[$rand_key]['question']; //return lai array, lay question
 	}//end function captcha
 	
-    
+    function clean_email($value) {
+        $suspects = array('to:', 'bcc:','cc:','content-type:','mime-version:', 'multipart-mixed:','content-transfer-encoding:');
+        foreach ($suspects as $s) {
+            if(strpos($value, $s) !== FALSE) {
+                return '';
+            }
+            // Tra ve gia tri cho dau xuong hang
+            $value = str_replace(array('\n', '\r', '%0a', '%0d'), '', $value);
+            return trim($value);
+        }
+    }   
+
+    //tai dinh huong nguoi dung
+    // Tai dinh huong nguoi dung ve trang mac dinh la index
+    // function redirect_to($page = 'index.php') {
+    //     $url = BASE_URL . $page;
+    //     header("Location: $url");
+    //     exit();
+    // }
+	 function redirect_to($path='index.php'){
+	    header("Location: $path");
+	}
+
 ?>
